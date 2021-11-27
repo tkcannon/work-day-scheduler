@@ -1,7 +1,7 @@
 # Work Day Scheduler
 
 ## Challenge 5
-- Uses jquery to create a Time Block fore each hour in a standard buisness day.
+- Uses jquery to create a Time Block for each hour in a standard buisness day.
 - Uses day.js to handle time events.
 - Time Blocks are colored depending whether they are in the past present or future based on the hour the page was loaded.
 - Checks localStorage to see if an existing schedule can be loaded, or if a new schedule should be made.

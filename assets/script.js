@@ -1,4 +1,10 @@
 var schedule = {};
+//tim vars
+var now = dayjs();
+$("#currentDay").text(now.format("dddd, MMMM D"));
+var firstRefresh = now.add(1, 'h').subtract(now.minute(), "m").subtract(now.second(), "s").subtract(now.millisecond(), "ms");
+var delay = firstRefresh.diff(now);
+console.log(delay);
 
 function loadSchedule() {
     schedule = JSON.parse(localStorage.getItem("schedule"));
@@ -27,7 +33,7 @@ function loadSchedule() {
         var hourtext = $("<p>").addClass("p-3").text(schedule.slot[i][0]);
         hour.append(hourtext);
         // text content of time-block
-        var text = $("<textarea>").addClass("past col-10 text-area").text(schedule.slot[i][1]);
+        var text = $("<textarea>").addClass("col-10 text-area " + timeState(i)).text(schedule.slot[i][1]);
         // save button
         var saveButton = $("<button>").addClass("saveBtn col-1").attr("id", schedule.slot[i][0]); // adds id of the hour so button clicks can check against array data in schedule
         var saveIcon = $("<i>").addClass("fas fa-save");
@@ -44,6 +50,19 @@ function saveSchedule() {
     localStorage.setItem("schedule", JSON.stringify(schedule));
 }
 
+function timeState(slotIndex) {
+    var startTime = 9
+    if (now.hour() < slotIndex + startTime) {
+        return ("future");
+    }
+    else if (now.hour() === slotIndex + startTime) {
+        return ("present");
+    }
+    else if (now.hour() > slotIndex + startTime) {
+        return ("past");
+    }
+}
+
 // when save button clicked
 $(".container").on("click", "button", function () {
     var id = $(this).attr("id");
@@ -57,5 +76,10 @@ $(".container").on("click", "button", function () {
         }
     }
 });
-
 loadSchedule();
+
+setInterval(function () {
+    loadSchedule();
+    delay = 360000;
+    console.log("Reloaded Schedule at: ", dayjs());
+}, delay);
